@@ -510,7 +510,7 @@ int main(void)
             setBf(t);
             tree.inOrder();
             cout << endl;
-            cout << "";
+            cout << " ";
         }
     }
 
