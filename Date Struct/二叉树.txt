@@ -1,0 +1,70 @@
+#include<iostream>
+using namespace std;
+
+typedef struct BTree_node {
+	char data;
+	struct BTree_node* LChild;
+	struct BTree_node* RChild;
+}BTree;
+
+void Create_BTree(BTree*& t)
+{
+	char s;
+	cin >> s;
+	if (s == '#')
+		t = NULL;
+	else
+	{
+		t = new BTree_node;
+		t->data = s;
+		Create_BTree(t->LChild);
+		Create_BTree(t->RChild);
+	}
+}
+
+void PreShow_BTree(BTree* t)                 //先序遍历输出二叉树
+{
+	if (t != NULL)
+	{
+		cout << t->data;
+		PreShow_BTree(t->LChild);
+		PreShow_BTree(t->RChild);
+	}
+}
+
+void InShow_BTree(BTree* t)                 //先序遍历输出二叉树
+{
+	if (t != NULL)
+	{		
+		InShow_BTree(t->LChild);
+		cout << t->data;
+		InShow_BTree(t->RChild);
+	}
+}
+
+void PostShow_BTree(BTree* t)                 //先序遍历输出二叉树
+{
+	if (t != NULL)
+	{
+		PostShow_BTree(t->LChild);
+		PostShow_BTree(t->RChild);
+		cout << t->data;
+	}
+}
+
+int main() {
+	int t;
+	cin >> t;
+	while (t--) {
+		BTree* root;
+		Create_BTree(root);
+		PreShow_BTree(root);
+		cout << endl;
+		InShow_BTree(root);
+		cout << endl;
+		PostShow_BTree(root);
+		cout << endl;
+	}
+	
+	return 0;
+}
