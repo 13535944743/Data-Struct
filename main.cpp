@@ -1,136 +1,71 @@
 #include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <string.h>
+#include <string>
+#include <cmath>
+#include <stack>
 using namespace std;
-
-#define ok 0
-#define error -1
-
-class ListNode
+int Next[10010];
+void GetNext(string p)
 {
-public:
-    int data;
-    ListNode *next;
-    ListNode()
+    int i = 0;
+    Next[0] = -1;
+    int j = -1;
+    for (; i <= p.size();)
     {
-        next = NULL;
-    }
-};
-class LinkList
-{
-public:
-    ListNode *head;
-    int len;
-    LinkList()
-    {
-        head = new ListNode();
-        len = 0;
-    }
-    ~LinkList()
-    {
-        ListNode *p, *q;
-        p = head;
-        while (p != NULL)
+        if (j == -1 || p[i] == p[j])
         {
-            q = p;
-            p = p->next;
-            delete q;
-        }
-        len = 0;
-        head = NULL;
-    }
-    ListNode *LL_index(int i)
-    {
-        int index = 0;
-        ListNode *p = head;
-        while (p)
-        {
-            if (index == i)
-            {
-                return p;
-            }
-            p = p->next;
-            index++;
-        }
-        return NULL;
-    }
-    int LL_insert(int i, int item)
-    {
-        ListNode *index = LL_index(i - 1);
-        if (index == NULL)
-        {
-            cout << "error" << endl;
-            return error;
+            ++i;
+            ++j;
+            Next[i] = j;
         }
         else
-        {
-            ListNode *p = new ListNode();
-            p->data = item;
-            p->next = index->next;
-            index->next = p;
-            len++;
-            return ok;
-        }
+            j = Next[j];
     }
-    int change(int x1, int x2)
+}
+int KMPFind(string s, string p, int pos)
+{
+    int i = pos;
+    int j = 0;
+    int len_s = s.size();
+    int len_p = p.size();
+    while (i < len_s && j < len_p)
     {
-        if (x1 <= 0 || x1 > len || x2 <= 0 || x2 > len)
+        if (j == -1 || s[i] == p[j])
         {
-            return error;
+            ++i;
+            ++j;
         }
-        ListNode *index1 = LL_index(x1 - 1);
-        ListNode *index2 = LL_index(x2 - 1);
-
-        ListNode *p = index1->next;
-        ListNode *q = index2->next;
-
-        ListNode *temp = q->next;
-        index1->next = q;
-        q->next = p->next;
-
-        index2->next = p;
-        p->next = temp;
-        return ok;
+        else
+            j = Next[j];
     }
-    void LL_display()
-    {
-        ListNode *p = head->next;
-        while (p)
-        {
-            cout << p->data << " ";
-            p = p->next;
-        }
-        cout << endl;
-    }
-};
+    if (j == len_p)
+        return i - j + 1;
+    else
+        return -1;
+}
 int main()
 {
-    LinkList ll;
-    int n;
-    cin >> n;
-    for (int i = 1; i <= n; i++)
+    int t;
+    cin >> t;
+    while (t--)
     {
-        int m;
-        cin >> m;
-        ll.LL_insert(i, m);
-    }
-    ll.LL_display();
-    int weizhi1, weizhi2;
-    cin >> weizhi1 >> weizhi2;
-    if (ll.change(weizhi1, weizhi2) == ok)
-    {
-        ll.LL_display();
-    }
-    else
-    {
-        cout << "error" << endl;
-    }
-    cin >> weizhi1 >> weizhi2;
-    if (ll.change(weizhi1, weizhi2) == ok)
-    {
-        ll.LL_display();
-    }
-    else
-    {
-        cout << "error" << endl;
+        memset(Next, 0, sizeof(Next));
+        string s;
+        string p;
+        cin >> s;
+        cin >> p;
+        GetNext(p);
+        int temp = KMPFind(s, p, 0);
+
+        for (int i = 0; i < p.size(); i++)
+            cout << Next[i] << " ";
+        cout << endl;
+        if (temp == -1)
+            cout << 0 << endl;
+        else
+            cout << temp << endl;
     }
     return 0;
 }

@@ -1,48 +1,91 @@
 #include <iostream>
+#include <cstring>
 using namespace std;
-void HeapAdjust(int a[], int i, int n)
+int n;
+
+void display(string s[])
 {
-    int rc = a[i];
-    for (int j = 2 * i; j < n; j *= 2)
+    for (int i = 0; i < n; i++)
     {
-        if (j < n && a[j] < a[j + 1])
-        {
-            j++;
-        }
-        if (!rc < a[j])
-        {
-            break;
-        }
-        a[i] = a[j];
-        i = j;
+        cout << s[i] << " ";
     }
-    a[i] = rc;
+    cout << endl;
 }
-void HeapSort(int a[], int n)
+
+void Merge(string s[], string s1[], int left, int mid, int right)
 {
-    for (int i = n / 2; i > 0; i--)
+    int i = left, j, k;
+    for (j = mid + 1, k = left; i <= mid && j <= right; k++)
     {
-        HeapAdjust(a, i, n);
+        if (s[i] > s[j])
+        {
+            s1[k] = s[i++];
+        }
+        else
+        {
+            s1[k] = s[j++];
+        }
     }
-    for (int i = n; i > 1; i--)
+
+    while (i <= mid)
     {
-        int temp = a[i];
-        a[i] = a[1];
-        a[1] = temp;
-        HeapAdjust(a, 1, i - 1);
+        s1[k++] = s[i++];
+    }
+
+    while (j <= right)
+    {
+        s1[k++] = s[j++];
+    }
+
+    k = left;
+    while (left <= right)
+    {
+        s[left++] = s1[k++];
     }
 }
+
 int main()
 {
-    int a[6];
-    for (int i = 1; i <= 5; i++)
+    int t;
+    cin >> t;
+    while (t--)
     {
-        cin >> a[i];
-    }
-    HeapSort(a, 5);
-    for (int i = 1; i <= 5; i++)
-    {
-        cout << a[i] << " ";
+        cin >> n;
+        string *s = new string[n + 10];
+        string *s1 = new string[n + 10];
+        ;
+        for (int i = 0; i < n; i++)
+        {
+            cin >> s[i];
+        }
+        int flag = 0;
+        for (int i = 2;; i *= 2)
+        {
+            if (flag)
+            {
+                break;
+            }
+            if (i >= n)
+            {
+                flag = 1;
+            }
+            for (int j = 0; j < n; j += i)
+            {
+                int right = j + i - 1;
+                if (right > n)
+                {
+                    right = n - 1;
+                }
+                int mid = (j + right) / 2;
+                if (flag == 1)
+                {
+                    mid = (i / 2 - 1);
+                }
+                Merge(s, s1, j, mid, right);
+            }
+            display(s1);
+        }
+        cout << endl;
     }
     return 0;
 }
